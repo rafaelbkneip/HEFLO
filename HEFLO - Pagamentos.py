@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from selenium.webdriver.common.keys import Keys
 import os.path
 import heflo_info
 
@@ -25,6 +26,36 @@ options.add_argument("--start-maximized")
 
 navegador = webdriver.Chrome(options = options)
 
+# If modifying these scopes, delete the file token.json.
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+
+# The ID and range of a sample spreadsheet.
+SAMPLE_SPREADSHEET_ID = ""
+SAMPLE_RANGE_NAME = ""
+
+if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+try:
+    service = build("sheets", "v4", credentials=creds)
+
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result = (
+        sheet.values()
+        .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME)
+        .execute()
+    )
+    values = result.get("values", [])
+
+    if not values:
+      print("No data found.")
+
+except HttpError as err:
+    print(err)
+
+chamados = len(values)
+print('Número de chamados: ', chamados)
 
 navegador.get("https://app.heflo.com/")
 
@@ -89,7 +120,10 @@ while (True):
                 try: 
                         #Escrever os resultados na planilha / Write the results on the sheet
                     print(lista)
-                    print("\n")
+
+                    chamados = chamados + 1
+
+                    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range='A'+str(chamados)+":"+'L'+str(chamados), valueInputOption='USER_ENTERED', body={'values': lista }).execute()
                     
                 except Exception as e:
                     print(e) 
@@ -106,9 +140,32 @@ while (True):
 
                 try: 
                         #Escrever os resultados na planilha / Write the results on the sheet
-                    print("essa é a lista")
                     print(lista)
-                    print("\n")
+
+                    chamados = chamados + 1
+
+                    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range='A'+str(chamados)+":"+'L'+str(chamados), valueInputOption='USER_ENTERED', body={'values': lista }).execute()
+                    
+                except Exception as e:
+                    print(e)
+
+            elif(solicitacao == 'Financeiro - Solicitação de Adiantamento'):
+                print("Solicitação de Adiantamento")
+                lista_aux=[]
+                lista=[]
+                lista_aux = heflo_info.adiantamento(navegador)
+
+                print(lista_aux)
+
+                lista.append(lista_aux)
+
+                try: 
+                        #Escrever os resultados na planilha / Write the results on the sheet
+                    print(lista)
+
+                    chamados = chamados + 1
+
+                    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range='A'+str(chamados)+":"+'L'+str(chamados), valueInputOption='USER_ENTERED', body={'values': lista }).execute()
                     
                 except Exception as e:
                     print(e)
