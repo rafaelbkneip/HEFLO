@@ -54,8 +54,6 @@ try:
 except HttpError as err:
     print(err)
 
-chamados = len(values)
-print('Número de chamados: ', chamados)
 
 navegador.get("https://app.heflo.com/")
 
@@ -73,8 +71,14 @@ navegador.find_element(By.XPATH, '/html/body/div[3]/div/div/div[2]/div/div[1]/bu
 WebDriverWait(navegador,20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="mainDiv"]/div/div/a[3]/div')))
 navegador.find_element(By.XPATH, '//*[@id="mainDiv"]/div/div/a[3]/div').click()
 
+chamados = len(values)
+print('Número de chamados: ', chamados)
+
 #Solicitation number from which the code starts to scrap the data / Número da solicitação da qual o programa começa a obter os dados
-chamado = 48080
+#chamado = int(values[-1][0])
+chamado = 49501
+
+print("Esse é a última solicitação na planilha "+ str(values[-1][0]) +". O programa começara a leitura a partir do chamado " + str(chamado) +"." )
 
 while (True):
 
@@ -111,10 +115,8 @@ while (True):
                         
                 lista_aux=[]
                 lista=[]
-                lista_aux = heflo_info.pagamento(navegador)
-                        
+                lista_aux = heflo_info.pagamento(navegador)  
                 print(lista_aux)
-
                 lista.append(lista_aux)
 
                 try: 
@@ -133,17 +135,13 @@ while (True):
                 lista_aux=[]
                 lista=[]
                 lista_aux = heflo_info.reembolso(navegador)
-
                 print(lista_aux)
-
                 lista.append(lista_aux)
 
                 try: 
-                        #Escrever os resultados na planilha / Write the results on the sheet
+                    #Escrever os resultados na planilha / Write the results on the sheet
                     print(lista)
-
                     chamados = chamados + 1
-
                     result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID, range='A'+str(chamados)+":"+'L'+str(chamados), valueInputOption='USER_ENTERED', body={'values': lista }).execute()
                     
                 except Exception as e:
@@ -154,9 +152,7 @@ while (True):
                 lista_aux=[]
                 lista=[]
                 lista_aux = heflo_info.adiantamento(navegador)
-
                 print(lista_aux)
-
                 lista.append(lista_aux)
 
                 try: 
@@ -174,5 +170,4 @@ while (True):
                 print("A implementar")
 
     except Exception as e:
-        print("passei aqui")
-        print('Não implementado ainda')
+        print('Não implementado ainda \n')
