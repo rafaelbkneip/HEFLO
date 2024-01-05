@@ -74,7 +74,7 @@ WebDriverWait(navegador,20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id
 navegador.find_element(By.XPATH, '//*[@id="mainDiv"]/div/div/a[3]/div').click()
 
 #Solicitation number from which the code starts to scrap the data / Número da solicitação da qual o programa começa a obter os dados
-chamado = 45900
+chamado = 48080
 
 while (True):
 
@@ -149,7 +149,7 @@ while (True):
                 except Exception as e:
                     print(e)
 
-            elif(solicitacao == 'Financeiro - Solicitação de Adiantamento'):
+            elif(solicitacao == 'Solicitação de Adiantamento'):
                 print("Solicitação de Adiantamento")
                 lista_aux=[]
                 lista=[]
@@ -174,4 +174,5 @@ while (True):
                 print("A implementar")
 
     except Exception as e:
+        print("passei aqui")
         print('Não implementado ainda')
