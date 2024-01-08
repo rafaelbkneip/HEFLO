@@ -1,20 +1,24 @@
+#Selenium installations / Instalações para o selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 import selenium.webdriver.support.expected_conditions as EC
 from selenium.webdriver import ActionChains
+
 from time import sleep
 
+#Error list / Lista de error
 lista_error = "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR", "ERROR"
 
+#Payment solicitation / Solciitação de pagamento
 def pagamento(navegador):
     lista_aux = []
 
-    WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="wrapper"]')))
-    wrapper = navegador.find_element(By.XPATH, '//*[@id="wrapper"]')
-
+    #Solicitation number / Número da solicitação
     lista_aux.append(navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr/td[1]').text)
 
-    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML 
+    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML
+    WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="wrapper"]')))
+    wrapper = navegador.find_element(By.XPATH, '//*[@id="wrapper"]')     
     elemento = navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr')
     actionChains = ActionChains(navegador)
     actionChains.double_click(elemento).perform()
@@ -27,45 +31,47 @@ def pagamento(navegador):
     except:
         return lista_error
 
-    #Conferência do e-mail para verificação da janela de alerta
+    #Depending on the location of the 'Name' field, the rest of the information can be located at different positions. Make sure that it is 'Name' field
+    #Dependendo da localização do campo de 'Nome', o resto das informações podem ser localizadas em diferentes posiçõe. Garantir que esse é o campo de 'Nome'.
+    #Conferência do e-mail para verificação da janela de alerta: verificar se não existe @ no texto desse elemento
     if(nome.split('@')[0] == nome):
         print("Nome")
 
-        #Solicitation type
+        #Solicitation type / Tipo de solicitação
         lista_aux.append("Solicitação de Pagamento")
 
-        #Nome
+        #Name / Nome
         lista_aux.append(nome)
 
-        #Coligada 
+        #Related Company / Coligada 
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Coligada')
 
-        #Unidade 
+        #Branch / Unidade/Filial
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Unidade')
 
-        #Natureza orçamentária 
+        #Budgetary nature / Natrureza orçamentária
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[8]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[8]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Natureza')
 
-        #Centro de custo
+        #Center of cost / Centro de custo 
         try:                                                                           
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]')))                                          
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except Exception as e:
             lista_aux.append('Centro de custo')  
 
-        #Cadastro
+        #Make sure the supplier is registered / Garantir que o fornecedor está cadastrado
         try:                                                                           
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[9]/div[1]/div/span/span[1]/span/span[1]')))                                          
             cadastro =wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[9]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title')
@@ -89,8 +95,8 @@ def pagamento(navegador):
                 print(e)
                 lista_aux.append('Valor')
 
-            try:                                                                          
-                #Discription / Descrição                                                    
+            #Discription / Descrição
+            try:                                                                                                                             
                 WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[17]/div[1]/div')))
                 lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[17]/div[1]/div').text)
             except:
@@ -104,50 +110,49 @@ def pagamento(navegador):
                 print(e)
                 lista_aux.append('Data')
         
-    
     else:
         lista_aux.append("Solicitação de Pagamento")
 
+        #Name / Nome
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[1]/div[1]/input')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[1]/div[1]/input').get_attribute('value'))
         except:
             lista_aux.append('Nome')
 
-        #Coligada
+        #Coligada / Related Company
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Coligada')
 
-        #Unidade filial
+        #Unidade/Filial / Branch 
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Unidade/filial')
 
-        #Natureza orçamentária 
+        #Budget / Natureza orçamentária 
         try:                                                     
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Natureza')
 
-        #Centro de custo
-         
+        #Center of cost / Centro de custo
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
         except:
             lista_aux.append('Centro de custo')
 
+        #Make sure the supplier is registered / Garantir que o fornecedor está cadastrado
         try:
             cadastro = wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[8]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title')
         except:
             cadastro = "Erro"
-        
         
         if (cadastro == 'Cadastrado'):
 
@@ -200,21 +205,22 @@ def pagamento(navegador):
 
     return lista_aux
 
-########################################################################################################################################
+################################################################################################################
+#Refund solicitation / Solicitação de reembolso
 def reembolso(navegador):
 
     lista_aux = []
 
+    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML 
     WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="wrapper"]')))
     wrapper = navegador.find_element(By.XPATH, '//*[@id="wrapper"]')
-
-    lista_aux.append(navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr/td[1]').text)
-
-    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML 
     elemento = navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr')
     actionChains = ActionChains(navegador)
     actionChains.double_click(elemento).perform()
     sleep(3)
+
+    #Solicitation number / Número da solicitação
+    lista_aux.append(navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr/td[1]').text)
 
     #Name / Nome
     try:                                                                           
@@ -223,15 +229,17 @@ def reembolso(navegador):
         print(nome)
     except:
         return lista_error
-
-    #Conferência do e-mail para verificação da janela de alert: verificar se não existe @ no texto desse elemento
+    
+    #Depending on the location of the 'Name' field, the rest of the information can be located at different positions. Make sure that it is 'Name' field
+    #Dependendo da localização do campo de 'Nome', o resto das informações podem ser localizadas em diferentes posiçõe. Garantir que esse é o campo de 'Nome'.
+    #Conferência do e-mail para verificação da janela de alerta: verificar se não existe @ no texto desse elemento
     if(nome.split('@')[0] == nome):
         lista_aux.append("Solicitação de Reembolso")
 
-        #Name/nome
+        #Name / nome
         lista_aux.append(nome)
 
-        #Coligada
+        #Related company / Coligada
         try:
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[2]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[2]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -239,7 +247,7 @@ def reembolso(navegador):
             print (e)
             lista_aux.append('Coligada')
 
-        #Unidade
+        #Branch / Unidade/Filial
         try:
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[3]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[3]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -247,7 +255,7 @@ def reembolso(navegador):
             print (e)
             lista_aux.append('Unidade')
 
-        #Natureza Orçamentária
+        #Budget / Natrureza orçamentária
         try:                                                                 
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[4]/div[2]/div/div[1]/div[2]/div[2]/table/tbody/tr/td[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[4]/div[2]/div/div[1]/div[2]/div[2]/table/tbody/tr/td[1]').text)
@@ -255,7 +263,7 @@ def reembolso(navegador):
             print (e)
             lista_aux.append('Natureza orçamentária')   
 
-        #Centro de Custo
+        #Center of cost / Centro de Custo 
         try:
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[3]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[3]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -263,8 +271,8 @@ def reembolso(navegador):
             print (e)
             lista_aux.append('Centro de custo')
 
+        #Supplier / Fornecedor 
         try:
-            #Fornecedor
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[10]/div[2]/input')))
             fornecedor = (wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[10]/div[2]/input').get_attribute('value'))
             print(fornecedor)
@@ -280,7 +288,7 @@ def reembolso(navegador):
             print (e)
             lista_aux.append('Fornecedor')    
 
-        #Valor
+        #Charged amount / Valor 
         try:                                                                                           
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/input')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/input').get_attribute('value'))
@@ -292,7 +300,7 @@ def reembolso(navegador):
                 print(e)
                 lista_aux.append('Valor')
 
-        #Descrição
+        #Description / Descrição
         try:                                                                 
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[1]/div')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[1]/div').text)
@@ -304,7 +312,7 @@ def reembolso(navegador):
                 print(e)
                 lista_aux.append('Descrição')
 
-        #Vencimento                                                                   
+        #Due date / Vencimento                                                                   
         try:                                                                    
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/input')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/input').get_attribute('value'))
@@ -324,17 +332,17 @@ def reembolso(navegador):
     return lista_aux
 
 ################################################################################################################
-
+#Advance solicitation / Solicitação de adiantamento
 def adiantamento(navegador):
 
     lista_aux = []
 
-    WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="wrapper"]')))
-    wrapper = navegador.find_element(By.XPATH, '//*[@id="wrapper"]')
-
+    #Solicitation number / Número da solicitação
     lista_aux.append(navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr/td[1]').text)
 
-    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML 
+    #Enable reading the elements inside the HTML wraper / Permitir a leitura dos elementos dentro do wraper do HTML
+    WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH, '//*[@id="wrapper"]')))
+    wrapper = navegador.find_element(By.XPATH, '//*[@id="wrapper"]')
     elemento = navegador.find_element(By.XPATH, '//*[@id="ui-id-2"]/tbody/tr')
     actionChains = ActionChains(navegador)
     actionChains.double_click(elemento).perform()
@@ -348,16 +356,16 @@ def adiantamento(navegador):
     except:
         return lista_error
 
-    #Conferência do e-mail para verificação da janela de alert: verificar se não existe @ no texto desse elemento
+    #Depending on the location of the 'Name' field, the rest of the information can be located at different positions. Make sure that it is 'Name' field
+    #Dependendo da localização do campo de 'Nome', o resto das informações podem ser localizadas em diferentes posiçõe. Garantir que esse é o campo de 'Nome'.
+    #Conferência do e-mail para verificação da janela de alerta: verificar se não existe @ no texto desse elemento
     if(nome.split('@')[0] == nome):
-        print("Nome")
-
         lista_aux.append("Solicitação de Adiantamento")
 
-        #Name/nome
+        #Name / nome
         lista_aux.append(nome)
 
-        #Coligada
+        #Related company / Coligada
         try:
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[6]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -365,7 +373,7 @@ def adiantamento(navegador):
             print (e)
             lista_aux.append('Coligada')
 
-        #Unidade
+        #Branch / Unidade/Filial
         try:    
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -373,7 +381,7 @@ def adiantamento(navegador):
             print (e)
             lista_aux.append('Unidade')
 
-        #Centro de Custo
+        #Center of cost / Centro de Custo
         try: 
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[7]/div[2]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -381,7 +389,7 @@ def adiantamento(navegador):
             print (e)
             lista_aux.append('Centro de custo')
 
-        #Natureza Orçamentária
+        #Budget / Natureza Orçamentária
         try:                                                                           
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[8]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[8]/div[1]/div/span/span[1]/span/span[1]').text)
@@ -389,7 +397,7 @@ def adiantamento(navegador):
             print (e)
             lista_aux.append('Natureza orçamentária')
 
-        #Fornecedor
+        #Supplier / Fornecedor
         try:
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[10]/div[1]/div/span/span[1]/span/span[1]')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[10]/div[1]/div/span/span[1]/span/span[1]').get_attribute('title'))
@@ -401,7 +409,7 @@ def adiantamento(navegador):
                     print (e)
                     lista_aux.append('Fornecedor') 
       
-        #Valor
+        #Charged amount / Valor
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[1]/input')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[1]/input').get_attribute('value'))
@@ -413,7 +421,7 @@ def adiantamento(navegador):
                     print (e)
                     lista_aux.append('Valor')
 
-        #Descrição
+        #Description / Descrição
         try:                
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[17]/div[1]/div')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[17]/div[1]/div').text)
@@ -425,7 +433,7 @@ def adiantamento(navegador):
                     print (e)
                     lista_aux.append('Descrição')
 
-        #Vencimento
+        #Due date / Vencimento
         try:                                                                            
             WebDriverWait(navegador,20).until(EC.presence_of_element_located((By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[2]/div/input')))
             lista_aux.append(wrapper.find_element(By.XPATH,'/html/body/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/div/div[3]/div[3]/form/div[12]/div[2]/div/input').get_attribute('value'))
